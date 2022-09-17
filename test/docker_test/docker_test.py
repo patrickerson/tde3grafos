@@ -1,0 +1,1 @@
+print("if you see this, your docker env has been  successful configured")

@@ -1,0 +1,7 @@
+
+# Visual Studio Code stuffs
+__pycache__/
+*.pyc
+
+# Project files
+data/
