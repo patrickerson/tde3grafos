@@ -38,7 +38,7 @@ Ambiente desenvolvimento: Python 3.11.0
 
 ## Padrão para pré processamento
 Arquivo: json
-```json
+```yaml
 
 {
     id: Message-ID(exemplo: <12774027.1075842491487.JavaMail.evans@thyme>),
