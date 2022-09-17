@@ -16,13 +16,20 @@ O código estará localizado em um repositório privado no github até que seja 
 A hierarquia dos arquivos em data ficará com a seguinte estrutura:
 
 ./data
-├── brawner-[br]
-├── carson-[br]
-├── cuilla-[br]
-├── derrick[br]
-├── donoho-[br]
-├── fossum-[br]
-└── giron-d[br]
+├── brawner- <br/>
+
+├── carson- <br/>
+
+├── cuilla- <br/>
+
+├── derrick <br/>
+
+├── donoho- <br/>
+
+├── fossum- <br/>
+
+└── giron-d <br/>
+
 
 [link_dataset]:https://drive.google.com/file/d/15vrDNLSYLvS4cvA0GILzeqx7SB4Mn6ud/view?usp=sharing
 
@@ -35,4 +42,4 @@ Ambiente desenvolvimento: Python 3.11.0
 1. docker build -t app
 2. docker run app
 
-[br]:<br/>
+[br]:
