@@ -2,6 +2,8 @@
 # Visual Studio Code stuffs
 __pycache__/
 *.pyc
+.vscode/
 
 # Project files
 data/
+data/*

@@ -34,3 +34,15 @@ Ambiente desenvolvimento: Python 3.11.0
 
 1. docker build -t app
 2. docker run app
+
+
+## Padrão para pré processamento
+Arquivo: json
+```json
+
+{
+    id: Message-ID(exemplo: <12774027.1075842491487.JavaMail.evans@thyme>),
+    date: datetime,
+    emailFrom: String,
+    fromTo: Lista de string,
+}
