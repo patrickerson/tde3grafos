@@ -1,4 +1,4 @@
-from os.path import realpath
+from os.path import realpath, isfile
 from platform import system
 
 class Files():
@@ -23,9 +23,18 @@ class Files():
         
     
     def read_file(self):
+        
         f = open(self.filename)
         return f.read()
+        
+    def write_file(self, write):
+        f = open(self.filename, "w")
+        f.write(write)
+        f.close
 
+    def valid(self):
+        return isfile(self.filename)
+        
 
     def relative_system_bar(self):
         my_os = system()
