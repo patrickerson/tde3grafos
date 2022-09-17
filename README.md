@@ -34,5 +34,3 @@ Ambiente desenvolvimento: Python 3.11.0
 
 1. docker build -t app
 2. docker run app
-
-[br]:
