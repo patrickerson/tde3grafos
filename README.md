@@ -15,14 +15,17 @@ O código estará localizado em um repositório privado no github até que seja 
 
 A hierarquia dos arquivos em data ficará com a seguinte estrutura:
 
+
 ./data<br/>
-├── brawner- <br/>
-├── carson- <br/>
-├── cuilla- <br/>
-├── derrick <br/>
-├── donoho- <br/>
-├── fossum- <br/>
-└── giron-d <br/>
+├── dirty_data<br/>
+│   ├── brawner-s<br/>
+│   ├── carson-m<br/>
+│   ├── cuilla-m<br/>
+│   ├── derrick-j<br/>
+│   ├── donoho-l<br/>
+│   ├── fossum-d<br/>
+│   └── giron-d<br/>
+└── preprocessing_data<br/>
 
 [link_dataset]:https://drive.google.com/file/d/15vrDNLSYLvS4cvA0GILzeqx7SB4Mn6ud/view?usp=sharing
 
