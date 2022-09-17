@@ -17,17 +17,11 @@ A hierarquia dos arquivos em data ficará com a seguinte estrutura:
 
 ./data
 ├── brawner- <br/>
-
 ├── carson- <br/>
-
 ├── cuilla- <br/>
-
 ├── derrick <br/>
-
 ├── donoho- <br/>
-
 ├── fossum- <br/>
-
 └── giron-d <br/>
 
 
