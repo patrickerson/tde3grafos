@@ -15,7 +15,7 @@ O código estará localizado em um repositório privado no github até que seja 
 
 A hierarquia dos arquivos em data ficará com a seguinte estrutura:
 
-./data
+./data<br/>
 ├── brawner- <br/>
 ├── carson- <br/>
 ├── cuilla- <br/>
@@ -23,7 +23,6 @@ A hierarquia dos arquivos em data ficará com a seguinte estrutura:
 ├── donoho- <br/>
 ├── fossum- <br/>
 └── giron-d <br/>
-
 
 [link_dataset]:https://drive.google.com/file/d/15vrDNLSYLvS4cvA0GILzeqx7SB4Mn6ud/view?usp=sharing
 
