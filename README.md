@@ -6,12 +6,15 @@ Membros da equipe que participaram na criação deste TDE:
 
 O código estará localizado em um repositório privado no github até que seja realizado a data de entrega. Após isso, estaremos disponibilizando o código em modo público.
 
+---
+
 ## Instruções de instalação
 
 1. Criar a pasta data
 2. Realizar o download do [dataset][link_dataset]
 3. Extrair os arquivos do .zip
 4. Inserir os arquivos na pasta **data**
+5. Executar o comando python3 pip install -r requirements.txt
 
 A hierarquia dos arquivos em data ficará com a seguinte estrutura:
 
@@ -29,15 +32,19 @@ A hierarquia dos arquivos em data ficará com a seguinte estrutura:
 
 [link_dataset]:https://drive.google.com/file/d/15vrDNLSYLvS4cvA0GILzeqx7SB4Mn6ud/view?usp=sharing
 
+---
+
 ## Notas técnicas
 
 Ambiente desenvolvimento: Python 3.11.0
+
 
 ### Teste em produção
 
 1. docker build -t app
 2. docker run app
 
+---
 
 ## Padrão para pré processamento
 Arquivo: json
@@ -49,3 +56,18 @@ Arquivo: json
     emailFrom: String,
     fromTo: Lista de string,
 }
+```
+---
+
+## To do:
+ - [ ] 1) A partir das mensagens de e-mail da base, gere um grafo  direcionado considerando o remetente e o(s) destinatários de cada mensagem. O  grafo deve ser ponderado, considerando a frequência com que um remetente envia  uma mensagem para um destinatário. O grafo também deve ser rotulado,  considerando como rótulo o e-mail de cada usuário.
+ - [ ] 2) Implemente métodos/funções para extrair as seguintes  informações gerais do grafo construído: 
+    - [ ] a. O número de vértices do grafo; 
+    - [ ] b. O número de arestas do grafo; 
+    - [ ] c. Os 20 indivíduos que possuem maior grau de saída e o valor correspondente; 
+    - [ ] d. Os 20 indivíduos que possuem maior grau de entrada e o valor  correspondente; 
+    - [ ] e. Se o grafo é Euleriano (true) ou não (false).
+ - [ ] 3) Implemente um método/função que percorre o grafo em  PROFUNDIDADE e verifica se um indivíduo X pode alcançar um indivíduo Y retornando e mostrando o caminho percorrido (vértices visitados) em uma lista e o  tempo necessário para realizar a operação. 
+ - [ ] 4) Implemente um método/função que percorre o grafo em  LARGURA e verifica se um indivíduo X pode alcançar um indivíduo Y retornando  e mostrando o caminho percorrido (vértices visitados) em uma lista e o tempo  necessário para realizar a operação. 
+ - [ ] 5) Implemente um método/função que retorne uma lista com os  vértices que estão a uma distância de D arestas de um nó N. Considere que uma  ligação entre os nós X e Y corresponde a uma distância 1 entre X e Y. 
+ - [ ] 6) Implemente um método/função que encontre qual é o maior  caminho mínimo entre qualquer par de vértices do grafo (i.e., diâmetro do grafo),  retornando o valor e o caminho encontrado.

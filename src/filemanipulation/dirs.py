@@ -1,4 +1,3 @@
-
 from os import listdir
 from platform import system
 from config import WORKDIR
