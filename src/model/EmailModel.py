@@ -2,8 +2,7 @@
 
 class EmailModel:
 
-    def __init__(self, email):
-        self.email = email
+
 
     
     def set_schema(
@@ -20,3 +19,5 @@ class EmailModel:
         self.emailTo = emailTo
         self.content= content
         
+    def export_dict(self):
+        return dict(date=self.date, emailFrom=self.emailFrom, emailTo=self.emailTo, content=self.content)
