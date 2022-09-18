@@ -78,12 +78,14 @@ class Graph:
 
     def maior20saida(self): # retorna os 20 nodes com o maior grau de saida e o valor
         nodes = []
-        
+        # realiza um for, verifica se nodes está cheio, se cheio verifica se é maior que algo lá dentro, remove o menor lá dentro e insere o novo
+        # exitDegree(u)
         return nodes # [(node, grauDeSaida),...]
 
     def maior20entrada(self): # retorna os 20 nodes com o maior grau de entrada e o valor
         nodes = []
-
+        # realiza um for, verifica se nodes está cheio, se cheio verifica se é maior que algo lá dentro, remove o menor lá dentro e insere o novo
+        # entryDegree(u)
         return nodes # [(node, grauDeEntrada),...]
 
     def is_Euleriano(self): # verifica se o grafo é Euleriano (possui um ciclo contendo todas os nodes)
@@ -104,6 +106,4 @@ class Graph:
     
     def dijkstra(self, u): # percorre o grafo a partir do node u e retorna o peso do caminho até cada node
         return u # [(node, peso minimo),...]
-    
-    def deletarEstaPorra():
-        return "É."
+        
