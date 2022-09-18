@@ -104,3 +104,6 @@ class Graph:
     
     def dijkstra(self, u): # percorre o grafo a partir do node u e retorna o peso do caminho até cada node
         return u # [(node, peso minimo),...]
+    
+    def deletarEstaPorra():
+        return "É."
