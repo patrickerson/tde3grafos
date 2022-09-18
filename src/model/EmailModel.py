@@ -20,4 +20,4 @@ class EmailModel:
         self.content= content
         
     def export_dict(self):
-        return dict(date=self.date, emailFrom=self.emailFrom, emailTo=self.emailTo, content=self.content)
+        return dict(id=self.id,date=self.date, emailFrom=self.emailFrom, emailTo=self.emailTo, content=self.content)
