@@ -7,3 +7,5 @@ __pycache__/
 # Project files
 data/
 data/*
+*txt
+wrong_files

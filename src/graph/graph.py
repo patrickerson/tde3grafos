@@ -60,13 +60,17 @@ class Graph:
         line = ""
         print(self.list)
         print("------------")
+        file = open("test.txt", "a")
         for i in self.list:
             line+=f"{i} -> "
             for j in self.list[i]:
                 line+=f"{j} -> "
             print(line)
+            
+            file.write(line)
+            
             line=""
-
+        file.close()
     def n_nodes(self): # retorna número de vértices do grafo
         return len((self.list))
     

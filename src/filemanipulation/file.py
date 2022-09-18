@@ -32,6 +32,11 @@ class Files():
         f.write(write)
         f.close
 
+    def append_file(self):
+        return open(self.filename, "a")
+        
+
+
     def valid(self):
         return isfile(self.filename)
         
