@@ -1,9 +1,17 @@
 from collections import defaultdict
-
+from numpy import inf
 class Graph:
 
     def __init__(self):
         self.list = defaultdict(list)
+
+    def increment_edge(self, u, v):
+        for i in self.list[u]:
+            if i[0] == v:
+                i[1]+=1
+                return True
+        self.add_edge(u,v,1)
+        return False
 
     def add_node(self, u):
         if u not in self.list:
@@ -16,7 +24,7 @@ class Graph:
         self.add_node(u)
         if v not in self.list:
             return False
-        self.list[u].append((v, weight))
+        self.list[u].append([v, weight])
         return True
 
     def remove_edge(self, u, v):
@@ -58,16 +66,13 @@ class Graph:
 
     def print_list_adj(self):
         line = ""
-        print(self.list)
-        print("------------")
-        file = open("test.txt", "a")
+        file = open("test.txt", "w")
         for i in self.list:
             line+=f"{i} -> "
             for j in self.list[i]:
                 line+=f"{j} -> "
             print(line)
-            
-            file.write(line)
+            file.write(f"{line}\n")
             
             line=""
         file.close()
@@ -107,4 +112,67 @@ class Graph:
         return u, v # retorna [nodes a uma distancia v de u]
     
     def dijkstra(self, u): # percorre o grafo a partir do node u e retorna o peso do caminho até cada node
-        return u # [(node, peso minimo),...]
+        cost = {key: [inf, ""] for key in self.list if key !=u }
+        
+        cost[u] = [0,"-"]
+        print(cost)
+        visited = []
+        current_node = u
+
+        while len(visited) < len(self.list.keys()):
+            adjacent_nodes = self.list[current_node]
+            print(current_node)
+            print(visited)
+            if len(adjacent_nodes)==0:
+                visited.append(current_node)
+            for k,v in adjacent_nodes:
+                if k not in visited:
+                    print(cost[current_node][0])
+                    new_dist = cost[current_node][0] + v
+                    if new_dist < cost[k][0]:
+                        cost[k][0] = new_dist
+                        cost[k][1] = current_node
+                visited.append(current_node)
+                min_value = inf
+                min_node = ""
+                for key in cost:
+                    if key in visited:
+                        continue
+                    print(key)
+                    if min_value >= cost[key][0]:
+                        min_value=cost[key][0]
+                        min_node = key
+                if min_node=="":
+                    break
+                current_node=min_node
+                print(visited)
+                print(cost)
+        return cost
+
+
+
+def main():
+    grafo1 = Graph()
+    grafo1.add_node("A")
+    grafo1.add_node("B")
+    grafo1.add_node("C")
+    grafo1.add_node("D")
+    grafo1.add_node("E")
+    grafo1.add_node("F")
+    grafo1.add_edge("B", "C", 1)
+    grafo1.add_edge("B", "A", 4)
+    
+    grafo1.add_edge("C", "A", 2)
+    grafo1.add_edge("C", "E", 10)
+    grafo1.add_edge("D", "F", 6)
+    grafo1.add_edge("B", "D", 5)
+    grafo1.add_edge("E", "F", 2)
+    grafo1.add_edge("D", "C", 8)
+    grafo1.add_edge("D", "E", 2)
+    grafo1.add_edge("C", "D", 8)
+    grafo1.print_list_adj()
+    print(grafo1.Dijkstra("B","F"))
+
+
+if __name__ == "__main__":
+    main()
