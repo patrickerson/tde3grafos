@@ -9,27 +9,33 @@ from model.EmailModel import EmailModel
 
 clean_data = Dirs("preprocessing_data/ready_data")
 
-G = Graph()
+def gen_graph(G):
+    for i in clean_data.list_subdirs():
+        f = Files(i)
+        file_data = loads(f.read_file())
+        node = EmailModel()
+        node.set_schema(
+            id=file_data['id'],
+            date=file_data['date'],
+            emailFrom=file_data['emailFrom'],
+            emailTo=file_data['emailTo']
+        )
+        G.add_node(node.emailFrom)
+        if not type(node.emailTo) is str:
+            for email in node.emailTo:
+                G.add_node(email)
+                if G.check_edge(node.emailFrom, email):
+                    pass
+                G.increment_edge(node.emailFrom,email)
+        else:
+            G.add_node(node.emailTo)
+            G.increment_edge(node.emailFrom,node.emailTo)
 
-for i in clean_data.list_subdirs():
-    f = Files(i)
-    file_data = loads(f.read_file())
-    node = EmailModel()
-    node.set_schema(
-        id=file_data['id'],
-        date=file_data['date'],
-        emailFrom=file_data['emailFrom'],
-        emailTo=file_data['emailTo']
-    )
-    G.add_node(node.emailFrom)
-    print(node.emailTo)
-    if not type(node.emailTo) is str:
-        for email in node.emailTo:
-            G.add_node(email)
-            G.add_edge(node.emailFrom,email)
-    else:
-        G.add_node(node.emailTo)
-        G.add_edge(node.emailFrom,node.emailTo)
 
-G.print_list_adj()
+if __name__ == "__main__":
 
+    G = Graph()
+    gen_graph(G)
+    G.print_list_adj()
+    print(f"nodes: {G.n_nodes()}")
+    print(f"edges: {G.n_edge()}")
