@@ -87,7 +87,7 @@ for i in sub_dirs:
             
             if f.valid():
                 reader = f.read_file().split("\n")
-                create = create_file(reader, f.filename)
+                create = create_file(reader)
                 if create == None:
                     pass
                 elif create:
@@ -98,7 +98,7 @@ for i in sub_dirs:
                 for sla in Dirs(cabo_criatividade).list_subdirs():
                     f = Files(sla)
                     reader = f.read_file().split("\n")
-                    if create_file(reader, f.filename):
+                    if create_file(reader):
                         counter+=1
                     else:
                         wrong_counter+=1
