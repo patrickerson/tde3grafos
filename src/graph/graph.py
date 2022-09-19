@@ -111,18 +111,14 @@ class Graph:
     def distancia(self, u, v): # recebe um node e a distancia
         return u, v # retorna [nodes a uma distancia v de u]
     
-    def dijkstra(self, u): # percorre o grafo a partir do node u e retorna o peso do caminho até cada node
+    def dijkstra(self, u, destiny_node): # percorre o grafo a partir do node u e retorna o peso do caminho até cada node
         cost = {key: [inf, ""] for key in self.list if key !=u }
-        
         cost[u] = [0,"-"]
-        print(cost)
         visited = []
         current_node = u
 
         while len(visited) < len(self.list.keys()):
             adjacent_nodes = self.list[current_node]
-            print(current_node)
-            print(visited)
             if len(adjacent_nodes)==0:
                 visited.append(current_node)
             for k,v in adjacent_nodes:
@@ -132,22 +128,20 @@ class Graph:
                     if new_dist < cost[k][0]:
                         cost[k][0] = new_dist
                         cost[k][1] = current_node
-                visited.append(current_node)
-                min_value = inf
-                min_node = ""
-                for key in cost:
-                    if key in visited:
-                        continue
-                    print(key)
-                    if min_value >= cost[key][0]:
-                        min_value=cost[key][0]
-                        min_node = key
-                if min_node=="":
-                    break
-                current_node=min_node
-                print(visited)
-                print(cost)
-        return cost
+            visited.append(current_node)
+            min_value = inf
+            min_node = ""
+            for key in cost:
+                if key in visited:
+                    continue
+                if min_value >= cost[key][0]:
+                    min_value=cost[key][0]
+                    min_node = key
+            if min_node=="":
+                break
+            current_node=min_node
+            
+        return cost[destiny_node][0]
 
 
 
@@ -171,7 +165,7 @@ def main():
     grafo1.add_edge("D", "E", 2)
     grafo1.add_edge("C", "D", 8)
     grafo1.print_list_adj()
-    print(grafo1.Dijkstra("B","F"))
+    print(grafo1.dijkstra("B","E"))
 
 
 if __name__ == "__main__":

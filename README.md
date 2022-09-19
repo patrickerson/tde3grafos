@@ -60,10 +60,10 @@ Arquivo: json
 ---
 
 ## To do:
- - [ ] 1) A partir das mensagens de e-mail da base, gere um grafo  direcionado considerando o remetente e o(s) destinatários de cada mensagem. O  grafo deve ser ponderado, considerando a frequência com que um remetente envia  uma mensagem para um destinatário. O grafo também deve ser rotulado,  considerando como rótulo o e-mail de cada usuário.
+ - [x] 1) A partir das mensagens de e-mail da base, gere um grafo  direcionado considerando o remetente e o(s) destinatários de cada mensagem. O  grafo deve ser ponderado, considerando a frequência com que um remetente envia  uma mensagem para um destinatário. O grafo também deve ser rotulado,  considerando como rótulo o e-mail de cada usuário.
  - [ ] 2) Implemente métodos/funções para extrair as seguintes  informações gerais do grafo construído: 
-    - [ ] a. O número de vértices do grafo; 
-    - [ ] b. O número de arestas do grafo; 
+    - [x] a. O número de vértices do grafo; 
+    - [x] b. O número de arestas do grafo; 
     - [ ] c. Os 20 indivíduos que possuem maior grau de saída e o valor correspondente; 
     - [ ] d. Os 20 indivíduos que possuem maior grau de entrada e o valor  correspondente; 
     - [ ] e. Se o grafo é Euleriano (true) ou não (false).
