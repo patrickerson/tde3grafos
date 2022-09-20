@@ -18,6 +18,7 @@ def gen_graph(G):
             emailFrom=file_data['emailFrom'],
             emailTo=file_data['emailTo']
         )
+
         G.add_node(node.emailFrom)
         if not type(node.emailTo) is str:
             for email in node.emailTo:

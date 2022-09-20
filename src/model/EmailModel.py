@@ -1,5 +1,8 @@
 
 
+import email
+
+
 class EmailModel:
 
 
@@ -10,6 +13,8 @@ class EmailModel:
         emailFrom=None,
         emailTo=None,
         ):
+
+        
         self.emailFrom = emailFrom
         self.emailTo = emailTo
         
