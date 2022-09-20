@@ -6,7 +6,7 @@ from json import loads
 from graph.graph import Graph
 
 from model.EmailModel import EmailModel
-
+from time import perf_counter
 clean_data = Dirs("preprocessing_data/ready_data")
 
 def gen_graph(G):
@@ -33,10 +33,24 @@ def gen_graph(G):
 
 if __name__ == "__main__":
 
+    timer = perf_counter()
     G = Graph()
     gen_graph(G)
+    timer_finish = perf_counter()
+    print(f"generate graph: {timer_finish-timer}")
     print(f"nodes: {G.n_nodes()}")
+    
     print(f"edges: {G.n_edge()}")
-    print()
-    G.print_list_adj()
-    print(G.great_min_path("sandra.brawner@enron.com", "felicia.beal@enron.com"))
+    
+    
+    timer = perf_counter()
+    result = G.DFS("sandra.brawner@enron.com","felicia.beal@enron.com")
+    timer_finish = perf_counter()
+    print(f"DFS: {timer_finish-timer}")
+
+    timer = perf_counter()
+    result = G.BFS("sandra.brawner@enron.com","felicia.beal@enron.com")
+    timer_finish = perf_counter()
+    print(f"BFS: {timer_finish-timer}")
+    # f = open("output.txt", "w")
+    # f.write(G.dijkstra("sandra.brawner@enron.com")[0].__str__())

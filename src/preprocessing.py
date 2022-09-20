@@ -3,7 +3,7 @@ from filemanipulation.dirs import Dirs
 from filemanipulation.file import Files
 from model.EmailModel import EmailModel
 import json
-
+from time import perf_counter
 
 
 class Preprocessing():
@@ -89,8 +89,7 @@ class Preprocessing():
         return True
         
     def start(self):
-        self.clean_old_files()
-        self.gen_dirs()
+        
         for lvl1 in self.dirty_data.list_subdirs():
             new_dir = Dirs(lvl1)
             for lvl2 in new_dir.list_subdirs():
@@ -116,4 +115,8 @@ class Preprocessing():
 
 if __name__ == "__main__":
     preprocessing = Preprocessing()
+    preprocessing.clean_old_files()
+    preprocessing.gen_dirs
+    timer = perf_counter()
     preprocessing.start()
+    print(perf_counter()-timer)
