@@ -15,8 +15,6 @@ def gen_graph(G):
         file_data = loads(f.read_file())
         node = EmailModel()
         node.set_schema(
-            id=file_data['id'],
-            date=file_data['date'],
             emailFrom=file_data['emailFrom'],
             emailTo=file_data['emailTo']
         )
@@ -36,6 +34,8 @@ if __name__ == "__main__":
 
     G = Graph()
     gen_graph(G)
-    G.print_list_adj()
     print(f"nodes: {G.n_nodes()}")
     print(f"edges: {G.n_edge()}")
+    print()
+    G.print_list_adj()
+    print(G.great_min_path("sandra.brawner@enron.com", "felicia.beal@enron.com"))

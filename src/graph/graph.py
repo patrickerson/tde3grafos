@@ -1,4 +1,5 @@
 from collections import defaultdict
+from pprint import pprint
 from numpy import inf
 class Graph:
 
@@ -70,8 +71,7 @@ class Graph:
         for i in self.list:
             line+=f"{i} -> "
             for j in self.list[i]:
-                line+=f"{j} -> "
-            print(line)
+                line+=f"({j[0]} {j[1]} )-> "
             file.write(f"{line}\n")
             
             line=""
@@ -105,34 +105,37 @@ class Graph:
         return u, v # retorna lista de visitados + tempo
     
     def largo(self, u, v): # recebe dois nodes
-        # realiza uma busca em largura
+        
+        for adj in self.list[u]:
+            
+            pass
         return u, v # retorna lista de visitados + tempo
 
     def distancia(self, u, v): # recebe um node e a distancia
         return u, v # retorna [nodes a uma distancia v de u]
     
-    def dijkstra(self, u, destiny_node): # percorre o grafo a partir do node u e retorna o peso do caminho até cada node
-        cost = {key: [inf, ""] for key in self.list if key !=u }
+    def dijkstra(self, u): # percorre o grafo a partir do node u e retorna o peso do caminho até cada node
+        cost = {key: [inf, ""] for key in self.list }
         cost[u] = [0,"-"]
-        visited = []
+        visited = {key: False for key in self.list}
         current_node = u
-
-        while len(visited) < len(self.list.keys()):
+        while True:
             adjacent_nodes = self.list[current_node]
+            if visited[current_node]:
+                return cost
             if len(adjacent_nodes)==0:
-                visited.append(current_node)
+                visited[current_node]=True
             for k,v in adjacent_nodes:
-                if k not in visited:
-                    print(cost[current_node][0])
+                if not  visited[k]:
                     new_dist = cost[current_node][0] + v
                     if new_dist < cost[k][0]:
                         cost[k][0] = new_dist
                         cost[k][1] = current_node
-            visited.append(current_node)
+            visited[current_node]=True
             min_value = inf
             min_node = ""
             for key in cost:
-                if key in visited:
+                if visited[key]:
                     continue
                 if min_value >= cost[key][0]:
                     min_value=cost[key][0]
@@ -140,9 +143,11 @@ class Graph:
             if min_node=="":
                 break
             current_node=min_node
-            
-        return cost[destiny_node][0]
+        print("djikstra end")
+        return cost
 
+    def great_min_path(self, source_node, destinity_node):
+        return self.dijkstra(source_node)[destinity_node]
 
 
 def main():
@@ -165,7 +170,7 @@ def main():
     grafo1.add_edge("D", "E", 2)
     grafo1.add_edge("C", "D", 8)
     grafo1.print_list_adj()
-    print(grafo1.dijkstra("B","E"))
+    print(grafo1.dijkstra("B"))
 
 
 if __name__ == "__main__":

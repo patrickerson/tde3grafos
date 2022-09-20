@@ -1,4 +1,6 @@
-from os import listdir
+
+from genericpath import isdir
+from os import listdir, mkdir, path
 from platform import system
 from config import WORKDIR
 class Dirs:
@@ -10,6 +12,9 @@ class Dirs:
         self.real_workdir = f"{self.rootdir}{self.bar}{self.workdir}"
         
 
+    def make_dir(self):
+        if not isdir(self.real_workdir):
+            mkdir(self.real_workdir)
 
     def relative_system_bar(self):
         my_os = system()
