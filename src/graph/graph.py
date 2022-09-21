@@ -23,8 +23,6 @@ class Graph:
 
     def add_edge(self, u, v, weight=0):
         self.add_node(u)
-        if v not in self.graph:
-            return False
         self.graph[u].append([v, weight])
         return True
 
@@ -53,11 +51,8 @@ class Graph:
         return count
 
     def exitDegree(self, u):
-        count = 0
-        for i in self.graph:
-            if self.check_edge(u, i):
-                count += 1
-        return count
+        return len(self.graph[u])
+    
 
     def weight(self, u, v):
         for i in self.graph[u]:
@@ -121,11 +116,11 @@ class Graph:
         visited = {key: False for key in self.graph}
         path = []
         current_node = u
-        while True:
+        while not visited[current_node]:
             adjacent_nodes = self.graph[current_node]
-            if visited[current_node]:
-                return cost
             for k,v in adjacent_nodes:
+                if visited.get(k) == None: 
+                    visited[k] = True
                 if not  visited[k]:
                     new_dist = cost[current_node][0] + v
                     if new_dist < cost[k][0]:
@@ -136,6 +131,8 @@ class Graph:
             min_value = inf
             min_node = ""
             for key in cost:
+                if visited.get(k) == None: 
+                    visited[k] = True
                 if visited[key]:
                     continue
                 if min_value >= cost[key][0]:
@@ -146,6 +143,103 @@ class Graph:
             current_node=min_node
         print("djikstra end")
         return path,cost
+
+    def dijkstra_warshall(self, u, desired_weight): # percorre o grafo a partir do node u e retorna o peso do caminho até cada node
+        inf = float("inf")
+        cost = {key: [inf, ""] for key in self.graph }
+        cost[u] = [0,"-"]
+        visited = {key: False for key in self.graph}
+        desired_distance = []
+        current_node = u
+        while not visited[current_node]:
+            adjacent_nodes = self.graph[current_node]
+            # if visited[current_node]:
+            #     return path,cost
+            for k,_ in adjacent_nodes:
+                if visited.get(k) == None: 
+                    visited[k] = True
+                if not  visited[k]:
+                    new_dist = cost[current_node][0] + 1
+                    if new_dist < cost[k][0]:
+                        cost[k][0] = new_dist
+                        cost[k][1] = current_node
+            visited[current_node]=True
+            # if cost[current_node][0] == desired_weight:
+            #     path.append(current_node)
+            min_value = inf
+            min_node = ""
+            for key in cost:
+                if visited.get(key) == None: 
+                    visited[key] = True
+                if visited[key]:
+                    continue
+                if min_value >= cost[key][0]:
+                    min_value=cost[key][0]
+                    min_node = key
+            if min_node=="":
+                break
+            current_node=min_node
+        
+        for k in cost:
+            if cost[k][0]==desired_weight:
+                desired_distance.append(k)
+        return desired_distance
+
+    def Dijkstra(self, origem, alvo):
+        import numpy as np
+        
+        visitados = []
+        ListaCustoAnterior = {}
+        visitaveis = []
+        for vertice in self.graph.keys():
+            if (self.exitDegree(vertice) == 0 or self.entryDegree(vertice) == 0) and vertice != alvo and vertice != origem:
+                continue
+            elif vertice == origem:
+                ListaCustoAnterior[vertice] = [vertice, 0]
+                visitaveis.append(vertice)
+            else:
+                ListaCustoAnterior[vertice] = [vertice, np.inf]
+                visitaveis.append(vertice)
+        nodeAtual = origem
+        while len(visitados) < len(visitaveis):
+            # Obtém os nós adjacentes do nó atual
+            adjacent_nodes = self.graph[nodeAtual]
+            # Itera por cada nó adjacente
+            for adj in adjacent_nodes:
+                if adj in visitaveis and adj not in visitados:
+                    # Caso o nó ainda não tenha sido visitado, verifica o caminho
+                    # if adj not in visitados:
+                    # Obtém o peso da distância do nó de origem até o nó adjacente
+                    acc_cost = ListaCustoAnterior.get(nodeAtual)[1] + self.graph.get(nodeAtual).get(adj)
+                    # Se o peso é menor que o peso nele registrado, registra o novo peso e o nó de origem
+                    if ListaCustoAnterior.get(adj)[1] > acc_cost:
+                        ListaCustoAnterior.get(adj)[1] = acc_cost
+                        ListaCustoAnterior.get(adj)[0] = nodeAtual
+            # Iteração concluída, adiciona o Nó à lista de visitados
+            visitados.append(nodeAtual)
+            # Separação dos nós visitados dos não visitados
+            non_visted = [item for item in visitaveis if item not in visitados]
+            if non_visted != []:
+                # Busca pelo nó não visitado com o menor peso acumulado
+                nodeAtual = non_visted[0]
+                for vertice in non_visted:
+                    if ListaCustoAnterior.get(vertice)[1] < ListaCustoAnterior.get(nodeAtual)[1]:
+                        nodeAtual = vertice
+        # Processo para encontrar o caminho
+        
+        caminho = [alvo]
+        custo = ListaCustoAnterior.get(alvo)[1]
+        contador = 0
+        # Busca inicia a partir do destino, e vai retornando pelos caminhos mais leves até a origem
+        passo = ListaCustoAnterior.get(alvo)[0]
+        while contador < len(visitaveis):
+            caminho.insert(0, passo)
+            if passo == origem:
+                return caminho, custo
+            passo = ListaCustoAnterior.get(passo)[0]
+            contador += 1
+
+    
 
     def great_min_path(self, source_node, destinity_node):
         return self.dijkstra(source_node)[destinity_node]
@@ -161,13 +255,15 @@ class Graph:
             if not visited[n]:
                  visited[n] = True
                  path.append(n)
-            if(n==u): return visited
+            if(n==u): return True,path
             adj = self.graph[n]
             for vertice in adj:
                 # if vertice[0] not in visited:
+                if visited.get(vertice[0]) == None: 
+                    visited[vertice[0]] = True
                 if not visited[vertice[0]]:
                     stack.append(vertice[0])
-        return visited
+        return False,path
         
 
     def DFS(self,v,u):
@@ -180,12 +276,14 @@ class Graph:
             if not visited[n]: 
                 visited[n]=True
                 path.append(n)
-            if(n==u): return path
+            if(n==u): return True, path
             adj = self.graph[n]
             for vertice in adj:
+                if visited.get(vertice[0]) == None: 
+                    visited[vertice[0]] = True 
                 if not visited[vertice[0]]:
                     stack.append(vertice[0])
-        return visited      
+        return False, path      
 
 
 def main():

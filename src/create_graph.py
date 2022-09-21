@@ -22,7 +22,7 @@ def gen_graph(G):
         G.add_node(node.emailFrom)
         if not type(node.emailTo) is str:
             for email in node.emailTo:
-                G.add_node(email)
+                # G.add_node(email)
                 if G.check_edge(node.emailFrom, email):
                     pass
                 G.increment_edge(node.emailFrom,email)
@@ -52,5 +52,9 @@ if __name__ == "__main__":
     result = G.BFS("sandra.brawner@enron.com","felicia.beal@enron.com")
     timer_finish = perf_counter()
     print(f"BFS: {timer_finish-timer}")
-    # f = open("output.txt", "w")
-    # f.write(G.dijkstra("sandra.brawner@enron.com")[0].__str__())
+    
+    G.print_graph_adj()
+    # print(G.Dijkstra("sandra.brawner@enron.com", "felicia.beal@enron.com"))
+    print(G.dijkstra("sandra.brawner@enron.com")[0])
+    f = open("output.txt", "w")
+    f.write(G.dijkstra_warshall("sandra.brawner@enron.com", 1).__str__())
