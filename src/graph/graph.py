@@ -53,11 +53,15 @@ class Graph:
         return count
 
     def exitDegree(self, u):
+<<<<<<< Updated upstream
         count = 0
         for i in self.list:
             if self.check_edge(u, i):
                 count += 1
         return count
+=======
+        return len(self.graph[u])
+>>>>>>> Stashed changes
 
     def weight(self, u, v):
         for i in self.list[u]:
@@ -76,6 +80,7 @@ class Graph:
             
             line=""
         file.close()
+
     def n_nodes(self): # retorna número de vértices do grafo
         return len((self.list))
     
@@ -87,18 +92,23 @@ class Graph:
 
     def maior20saida(self): # retorna os 20 nodes com o maior grau de saida e o valor
         nodes = []
-        
-        return nodes # [(node, grauDeSaida),...]
+        for i in self.graph:
+            nodes.append((self.exitDegree(i),i))
+        nodes.sort(reverse=True)
+        return nodes[:20]
 
     def maior20entrada(self): # retorna os 20 nodes com o maior grau de entrada e o valor
         nodes = []
-
-        return nodes # [(node, grauDeEntrada),...]
+        for i in self.graph:
+            nodes.append((self.entryDegree(i),i))
+        nodes.sort(reverse=True)
+        return nodes[:20]
 
     def is_Euleriano(self): # verifica se o grafo é Euleriano (possui um ciclo contendo todas os nodes)
         if 0 == 0:
             return True
         return False
+<<<<<<< Updated upstream
 
     def profundo(self, u, v): # recebe dois nodes
         # realiza uma busca em profundidade
@@ -113,6 +123,8 @@ class Graph:
 
     def distancia(self, u, v): # recebe um node e a distancia
         return u, v # retorna [nodes a uma distancia v de u]
+=======
+>>>>>>> Stashed changes
     
     def dijkstra(self, u): # percorre o grafo a partir do node u e retorna o peso do caminho até cada node
         cost = {key: [inf, ""] for key in self.list }
