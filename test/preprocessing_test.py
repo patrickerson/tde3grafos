@@ -1,22 +1,22 @@
 from json import loads
 import unittest
 
-from filemanipulation.dirs import Dirs
-from filemanipulation.file import Files
-from model.EmailModel import EmailModel
+import filemanipulation.dirs as dirs
+import filemanipulation.file as file
+import model.EmailModel as model
 
 
 class PreprocessingTest(unittest.TestCase):
     
-    clean_data = Dirs("preprocessing_data/ready_data")
+    clean_data = dirs.Dirs("preprocessing_data/ready_data")
 
 
     def test_gen_file(self):
         
         for i in self.clean_data.list_subdirs():
-            f = Files(i)
+            f = file.Files(i)
             file_data = loads(f.read_file())
-            node = EmailModel()
+            node = model.EmailModel()
             node.set_schema(
                 emailFrom=file_data['emailFrom'],
                 emailTo=file_data['emailTo']
