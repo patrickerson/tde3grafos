@@ -52,7 +52,6 @@ class Graph:
 
     def exitDegree(self, u):
         return len(self.graph[u])
-    
 
     def weight(self, u, v):
         for i in self.graph[u]:
@@ -71,6 +70,7 @@ class Graph:
             
             line=""
         file.close()
+
     def n_nodes(self): # retorna número de vértices do grafo
         return len((self.graph))
     
@@ -82,32 +82,31 @@ class Graph:
 
     def maior20saida(self): # retorna os 20 nodes com o maior grau de saida e o valor
         nodes = []
-        
-        return nodes # [(node, grauDeSaida),...]
+        for i in self.graph:
+            nodes.append((self.exitDegree(i),i))
+        nodes.sort(reverse=True)
+        return nodes[:20]
 
     def maior20entrada(self): # retorna os 20 nodes com o maior grau de entrada e o valor
         nodes = []
+        for i in self.graph:
+            nodes.append((self.entryDegree(i),i))
+        nodes.sort(reverse=True)
+        return nodes[:20]
 
-        return nodes # [(node, grauDeEntrada),...]
-
-    def is_Euleriano(self): # verifica se o grafo é Euleriano (possui um ciclo contendo todas os nodes)
-        if 0 == 0:
-            return True
-        return False
-
-    def profundo(self, u, v): # recebe dois nodes
-        # realiza uma busca em profundidade
-        return u, v # retorna gaph de visitados + tempo
-    
-    def largo(self, u, v): # recebe dois nodes
-        
-        for adj in self.graph[u]:
-            
-            pass
-        return u, v # retorna gaph de visitados + tempo
-
-    def distancia(self, u, v): # recebe um node e a distancia
-        return u, v # retorna [nodes a uma distancia v de u]
+    def is_euleriano(self): # verifica se o grafo é Euleriano (possui um ciclo contendo todas os nodes)
+        in1out = False
+        out1in = False
+        for i in self.graph:
+            if (in1out == False) and (self.entryDegree(i)+1 == self.exitDegree(i)):
+                in1out = True
+            if (out1in == False) and (self.entryDegree(i) == self.exitDegree(i)+1):
+                out1in = True
+            if (self.entryDegree(i) == 0) or (self.exitDegree(i) == 0) or (self.entryDegree(i) != self.exitDegree(i)):
+                return False
+        if (in1out == False) or (out1in == False):
+            return False
+        return True
     
     def dijkstra(self, u): # percorre o grafo a partir do node u e retorna o peso do caminho até cada node
         inf = float("inf")
