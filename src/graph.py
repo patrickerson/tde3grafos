@@ -62,7 +62,7 @@ class Graph:
 
     def print_graph_adj(self):
         line = ""
-        file = open("test.txt", "w")
+        file = open("output_graph.txt", "w")
         for i in self.graph:
             line+=f"{i} -> "
             for j in self.graph[i]:
@@ -73,22 +73,23 @@ class Graph:
         file.close()
     def n_nodes(self): # retorna número de vértices do grafo
         return len((self.graph))
-    
     def n_edge(self): # retorna número de arestas do grafo
         count = 0
         for i in self.graph:
             count += len(self.graph[i])
         return count
-
     def maior20saida(self): # retorna os 20 nodes com o maior grau de saida e o valor
         nodes = []
-        
-        return nodes # [(node, grauDeSaida),...]
-
+        for i in self.graph:
+            nodes.append((self.exitDegree(i),i))
+        nodes.sort(reverse=True)
+        return nodes[:20]
     def maior20entrada(self): # retorna os 20 nodes com o maior grau de entrada e o valor
         nodes = []
-
-        return nodes # [(node, grauDeEntrada),...]
+        for i in self.graph:
+            nodes.append((self.entryDegree(i),i))
+        nodes.sort(reverse=True)
+        return nodes[:20]
 
     def is_Euleriano(self): # verifica se o grafo é Euleriano (possui um ciclo contendo todas os nodes)
         if 0 == 0:
@@ -114,25 +115,26 @@ class Graph:
         cost = {key: [inf, ""] for key in self.graph }
         cost[u] = [0,"-"]
         visited = {key: False for key in self.graph}
-        path = []
         current_node = u
         while not visited[current_node]:
             adjacent_nodes = self.graph[current_node]
             for k,v in adjacent_nodes:
-                if visited.get(k) == None: 
-                    visited[k] = True
+                if k == "felicia.beal@enron.com":
+                    print("start")
+                if visited.get(k) == None:
+                    cost[k] = [inf,""] 
+                    visited[k] = False
                 if not  visited[k]:
                     new_dist = cost[current_node][0] + v
                     if new_dist < cost[k][0]:
                         cost[k][0] = new_dist
                         cost[k][1] = current_node
             visited[current_node]=True
-            path.append(current_node)
             min_value = inf
             min_node = ""
             for key in cost:
                 if visited.get(k) == None: 
-                    visited[k] = True
+                    visited[k] = False
                 if visited[key]:
                     continue
                 if min_value >= cost[key][0]:
@@ -142,7 +144,28 @@ class Graph:
                 break
             current_node=min_node
         print("djikstra end")
-        return path,cost
+        return cost
+
+    def djijkstra_min_path(self, v, cost):
+        path=[v]
+        current_node = v
+        while cost[current_node][1] != "-":
+            
+            current_node = cost[current_node][1]
+            path.append(current_node)
+        path.reverse()
+        return cost[v][0],path
+
+    def min_max_path(self, u):
+        cost = self.dijkstra(u)
+        max_node =[ float("-inf"), "-"]
+        
+        for k in cost:
+            if cost[k][0] > max_node[0] and cost[k][0]!=float("inf"):
+                max_node = [cost[k][0], k]
+        print(max_node)
+        path = self.djijkstra_min_path(max_node[1], cost)
+        return max_node, path
 
     def dijkstra_warshall(self, u, desired_weight): # percorre o grafo a partir do node u e retorna o peso do caminho até cada node
         inf = float("inf")
@@ -244,46 +267,73 @@ class Graph:
     def great_min_path(self, source_node, destinity_node):
         return self.dijkstra(source_node)[destinity_node]
 
-    def BFS(self, v, u):
-        stack = []
-        stack.append(v)
-        visited = {key: False for key in self.graph}
-        path = []
-        while len(stack)>0:
-            n = stack.pop(0)
-            if n not in visited: visited.append(n)
-            if not visited[n]:
-                 visited[n] = True
-                 path.append(n)
-            if(n==u): return True,path
-            adj = self.graph[n]
-            for vertice in adj:
-                # if vertice[0] not in visited:
-                if visited.get(vertice[0]) == None: 
-                    visited[vertice[0]] = True
-                if not visited[vertice[0]]:
-                    stack.append(vertice[0])
-        return False,path
-        
+    # def BFS(self, v, u):
+    #     queue = []
+    #     queue.append(v)
+    #     visited = {key: False for key in self.graph}
+    #     path = []
+    #     while len(queue)>0:
+    #         n = queue.pop(0)
+    #         if n not in visited: visited[n]=True
+    #         if not visited[n]:
+    #              visited[n] = True
+    #              path.append(n)
+    #         if(n==u): return True,path
+    #         adj = self.graph[n]
+    #         for vertice in adj:
+    #             # if vertice[0] not in visited:
+    #             if visited.get(vertice[0]) == None: 
+    #                 visited[vertice[0]] = True
+    #             if not visited[vertice[0]]:
+    #                 queue.append(vertice[0])
+        # return False,path
 
-    def DFS(self,v,u):
-        stack = []
-        stack.append(v)
-        visited = {key: False for key in self.graph}
-        path = []
-        while stack!=[]:
-            n = stack.pop()
-            if not visited[n]: 
-                visited[n]=True
-                path.append(n)
-            if(n==u): return True, path
+    def BFS(self, v, u):
+        fila = []
+        fila.append(v)
+        visitados = []
+        while len(fila)>0:
+            n = fila.pop(0)
+            if n not in visitados: visitados.append(n)
+            if(n==u): return True, visitados
             adj = self.graph[n]
             for vertice in adj:
-                if visited.get(vertice[0]) == None: 
-                    visited[vertice[0]] = True 
-                if not visited[vertice[0]]:
-                    stack.append(vertice[0])
-        return False, path      
+                if vertice[0] not in visitados:
+                    fila.append(vertice[0])
+        return False, visitados
+        
+    def DFS(self,v,u):
+        pilha = []
+        pilha.append(v)
+        visitados = []
+        while pilha!=[]:
+            n = pilha.pop()
+            if n not in visitados: visitados.append(n)
+            if(n==u): return True,visitados
+            adj = self.graph[n]
+            for vertice in adj:
+                if vertice[0] not in visitados:
+                    pilha.append(vertice[0])
+        return False, visitados
+        
+    # def DFS(self,v,u):
+    #     stack = []
+    #     stack.append(v)
+    #     visited = {key: False for key in self.graph}
+    #     path = []
+    #     while stack!=[]:
+    #         n = stack.pop()
+    #         if not visited[n]: 
+    #             visited[n]=True
+    #             path.append(n)
+    #         if(n==u): return True, path
+    #         adj = self.graph[n]
+    #         for vertice in adj:
+    #             if visited.get(vertice[0]) == None: 
+    #                 visited[vertice[0]] = True 
+    #             if not visited[vertice[0]]:
+    #                 stack.append(vertice[0])
+    #     return False, path      
 
 
 def main():
@@ -305,7 +355,7 @@ def main():
     grafo1.add_edge("D", "C", 8)
     grafo1.add_edge("D", "E", 2)
     grafo1.add_edge("C", "D", 8)
-    grafo1.DFS("B", "F")
+ 
 
 
 
