@@ -61,7 +61,7 @@ Arquivo: json
 
 ## To do:
  - [x] 1) A partir das mensagens de e-mail da base, gere um grafo  direcionado considerando o remetente e o(s) destinatários de cada mensagem. O  grafo deve ser ponderado, considerando a frequência com que um remetente envia  uma mensagem para um destinatário. O grafo também deve ser rotulado,  considerando como rótulo o e-mail de cada usuário.
-    - [ ] Dar replace em emails fora do padrão: "trading<.williams@enron.com >"
+    - [x] Dar replace em emails fora do padrão: "trading<.williams@enron.com >"
     - [x] Verifica ocorrências de nós sem saída
  - [ ] 2) Implemente métodos/funções para extrair as seguintes  informações gerais do grafo construído: 
     - [x] a. O número de vértices do grafo; 

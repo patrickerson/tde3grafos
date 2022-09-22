@@ -38,9 +38,13 @@ def generic_infos():
 def search_view(function):
     source_node = input("vértice de origem: ")
     destiny_node = input("vertice de destino: ")
+    timer_init = perf_counter()
     result = function(source_node, destiny_node)
+    timer_end = perf_counter()
     # result = function("sandra.brawner@enron.com", "felicia.beal@enron.com")
     
+
+    print("CAMINHO")
     counter=1
     if result[0]:
         for i in result[1]:
@@ -48,6 +52,7 @@ def search_view(function):
             counter+=1
     print("É possível alcançar?")
     print(result[0])
+    print(f"tempo de execução: {timer_end-timer_init}")
 def dfs_view():
     print("BUSCA EM PROFUNDIDADE")
     search_view(G.DFS)
@@ -72,6 +77,11 @@ def dijkstra():
     print(G.djijkstra_min_path(destiny_node, cost))
     pass
 
+def graph_diameter():
+    user_input=input("escanear grafo com Dijkstra?")
+    if user_input.upper()=="Y":
+        G.scan_graph_with_dijkstra()
+    G.graph_diameter()
 if preprocessing_input.upper() == "Y":
     print("teste")
     preprocessing = Preprocessing()
@@ -95,7 +105,7 @@ opts = [
     dfs_view, 
     bfs_view,
     distance_d,
-    dijkstra
+    graph_diameter
 
 ]
 menu()

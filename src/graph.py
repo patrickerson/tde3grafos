@@ -1,5 +1,7 @@
 from collections import defaultdict
+import json
 from pprint import pprint
+from numpy import inf
 
 class Graph:
 
@@ -110,7 +112,10 @@ class Graph:
     def distancia(self, u, v): # recebe um node e a distancia
         return u, v # retorna [nodes a uma distancia v de u]
     
-    def dijkstra(self, u): # percorre o grafo a partir do node u e retorna o peso do caminho até cada node
+    def dijkstra(self, u, all_nodes=False): 
+        if all_nodes:
+            if len(self.graph[u]) == 0:
+                return {}
         inf = float("inf")
         cost = {key: [inf, ""] for key in self.graph }
         cost[u] = [0,"-"]
@@ -119,8 +124,7 @@ class Graph:
         while not visited[current_node]:
             adjacent_nodes = self.graph[current_node]
             for k,v in adjacent_nodes:
-                if k == "felicia.beal@enron.com":
-                    print("start")
+
                 if visited.get(k) == None:
                     cost[k] = [inf,""] 
                     visited[k] = False
@@ -133,8 +137,6 @@ class Graph:
             min_value = inf
             min_node = ""
             for key in cost:
-                if visited.get(k) == None: 
-                    visited[k] = False
                 if visited[key]:
                     continue
                 if min_value >= cost[key][0]:
@@ -143,7 +145,6 @@ class Graph:
             if min_node=="":
                 break
             current_node=min_node
-        print("djikstra end")
         return cost
 
     def djijkstra_min_path(self, v, cost):
@@ -159,9 +160,9 @@ class Graph:
     def min_max_path(self, u):
         cost = self.dijkstra(u)
         max_node =[ float("-inf"), "-"]
-        
+        inf = float("inf")
         for k in cost:
-            if cost[k][0] > max_node[0] and cost[k][0]!=float("inf"):
+            if cost[k][0] > max_node[0] and cost[k][0]!=inf:
                 max_node = [cost[k][0], k]
         print(max_node)
         path = self.djijkstra_min_path(max_node[1], cost)
@@ -264,76 +265,115 @@ class Graph:
 
     
 
-    def great_min_path(self, source_node, destinity_node):
-        return self.dijkstra(source_node)[destinity_node]
+    def graph_diameter(self):
+        cost_scan = {}
+        with open("outputs/dijkstra_scan.json", "r") as file:
+            cost_scan=json.loads(file.read())
 
-    # def BFS(self, v, u):
-    #     queue = []
-    #     queue.append(v)
-    #     visited = {key: False for key in self.graph}
-    #     path = []
-    #     while len(queue)>0:
-    #         n = queue.pop(0)
-    #         if n not in visited: visited[n]=True
-    #         if not visited[n]:
-    #              visited[n] = True
-    #              path.append(n)
-    #         if(n==u): return True,path
-    #         adj = self.graph[n]
-    #         for vertice in adj:
-    #             # if vertice[0] not in visited:
-    #             if visited.get(vertice[0]) == None: 
-    #                 visited[vertice[0]] = True
-    #             if not visited[vertice[0]]:
-    #                 queue.append(vertice[0])
-        # return False,path
+        counter =0
+        max_node=[float("-inf"),"-"]
+        remote_node = ""
+        init_remote_node = ""
+        max_cost = {}
+        for node in cost_scan:
+            for edge in cost_scan[node]:
+                
+                if cost_scan[node][edge][0] != float("inf") and cost_scan[node][edge][0] > max_node[0]:
+                    max_node = cost_scan[node][edge]
+                    remote_node=edge
+                    init_remote_node=node
+                    max_cost=cost_scan[node]
+                
+        print(f"{init_remote_node} {remote_node}")
+        print(self.djijkstra_min_path(remote_node, max_cost))
+        print(max_node)
+
+    def scan_graph_with_dijkstra(self):
+        counter =0
+        n_nodes = self.n_nodes()
+        inf = float("inf")
+        dijkstras_costs = {}
+        for node in self.graph:
+            print(f"\r{counter}/{n_nodes}", sep="", end="")
+            counter+=1
+            cost = self.dijkstra(node, all_nodes=True)
+            if cost != {}:
+        
+                dijkstras_costs[node]=cost
+            
+            
+        
+        with open("outputs/dijkstra_scan.json", "w") as file:
+            file.write(json.dumps(dijkstras_costs))
+        
 
     def BFS(self, v, u):
-        fila = []
-        fila.append(v)
-        visitados = []
-        while len(fila)>0:
-            n = fila.pop(0)
-            if n not in visitados: visitados.append(n)
-            if(n==u): return True, visitados
+        queue = []
+        queue.append(v)
+        visited = {key: False for key in self.graph}
+        path = []
+        while len(queue)>0:
+            n = queue.pop(0)
+            if n not in visited: visited[n]=True
+            if not visited[n]:
+                 visited[n] = True
+                 path.append(n)
+            if(n==u): return True,path
             adj = self.graph[n]
             for vertice in adj:
-                if vertice[0] not in visitados:
-                    fila.append(vertice[0])
-        return False, visitados
-        
-    def DFS(self,v,u):
-        pilha = []
-        pilha.append(v)
-        visitados = []
-        while pilha!=[]:
-            n = pilha.pop()
-            if n not in visitados: visitados.append(n)
-            if(n==u): return True,visitados
-            adj = self.graph[n]
-            for vertice in adj:
-                if vertice[0] not in visitados:
-                    pilha.append(vertice[0])
-        return False, visitados
-        
-    # def DFS(self,v,u):
-    #     stack = []
-    #     stack.append(v)
-    #     visited = {key: False for key in self.graph}
-    #     path = []
-    #     while stack!=[]:
-    #         n = stack.pop()
-    #         if not visited[n]: 
-    #             visited[n]=True
-    #             path.append(n)
-    #         if(n==u): return True, path
+                # if vertice[0] not in visited:
+                if visited.get(vertice[0]) == None: 
+                    visited[vertice[0]] = True
+                if not visited[vertice[0]]:
+                    queue.append(vertice[0])
+        return False,path
+
+    # def BFS(self, v, u):
+    #     fila = []
+    #     fila.append(v)
+    #     visitados = []
+    #     while len(fila)>0:
+    #         n = fila.pop(0)
+    #         if n not in visitados: visitados.append(n)
+    #         if(n==u): return True, visitados
     #         adj = self.graph[n]
     #         for vertice in adj:
-    #             if visited.get(vertice[0]) == None: 
-    #                 visited[vertice[0]] = True 
-    #             if not visited[vertice[0]]:
-    #                 stack.append(vertice[0])
-    #     return False, path      
+    #             if vertice[0] not in visitados:
+    #                 fila.append(vertice[0])
+    #     return False, visitados
+        
+    # def DFS(self,v,u):
+    #     pilha = []
+    #     pilha.append(v)
+    #     visitados = []
+    #     while pilha!=[]:
+    #         n = pilha.pop()
+    #         if n not in visitados: visitados.append(n)
+    #         if(n==u): return True,visitados
+    #         adj = self.graph[n]
+    #         for vertice in adj:
+    #             if vertice[0] not in visitados:
+    #                 pilha.append(vertice[0])
+    #     return False, visitados
+        
+    def DFS(self,v,u):
+        stack = []
+        stack.append(v)
+        visited = {key: False for key in self.graph}
+        path = []
+        while stack!=[]:
+            n = stack.pop()
+            if not visited[n]: 
+                visited[n]=True
+                path.append(n)
+            if(n==u): return True, path
+            adj = self.graph[n]
+            for vertice in adj:
+                if visited.get(vertice[0]) == None: 
+                    visited[vertice[0]] = True 
+                if not visited[vertice[0]]:
+                    stack.append(vertice[0])
+        return False, path      
 
 
 def main():
