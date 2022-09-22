@@ -1,9 +1,10 @@
 import os
-from filemanipulation.dirs import Dirs
-from filemanipulation.file import Files
-from model.EmailModel import EmailModel
+from src.filemanipulation.dirs import Dirs
+from src.filemanipulation.file import Files
+from src.model.EmailModel import EmailModel
+
 import json
-from time import perf_counter
+
 
 
 class Preprocessing():
@@ -40,6 +41,10 @@ class Preprocessing():
 
 
 
+    def parser_email(self,email):
+        if "<" in email:
+            email.split("<")[1].replace(">","")
+        return email
 
     def create_file(self, content):
         schema = EmailModel()
@@ -62,7 +67,8 @@ class Preprocessing():
                 if v[-1] == "":
                     v = v[:-1]
                 for c in v:
-                    replaced_list.append(c)
+                    
+                    replaced_list.append(self.parser_email(c))
                 counter_to+=1
             schema.set_schema(
                 emailFrom=content[2].split(": ")[1],
@@ -71,10 +77,14 @@ class Preprocessing():
         else:
             schema.set_schema(
                 emailFrom=content[2].split(": ")[1],
-                emailTo=emailTo
+                emailTo=self.parser_email(emailTo)
                 )
         dict_to_json = json.dumps(schema.export_dict())
-        if "@" not in schema.emailTo and type(schema.emailTo) != list or "," in schema.emailTo:
+        c1 = "@" not in schema.emailTo
+        c2 = type(schema.emailTo)
+        c3 = "," in schema.emailTo
+        
+        if c1 and  c2 != list or c3:
             gen_wrong_file = Files(f"{self.wrong_counter}.txt", data_workdir=self.path_wrong_data)
             var = "\n".join(content)
             gen_wrong_file.write_file(f"schema: {dict_to_json}\nfilename: {var}\n")
@@ -89,7 +99,7 @@ class Preprocessing():
         return True
         
     def start(self):
-        
+        print("teste")
         for lvl1 in self.dirty_data.list_subdirs():
             new_dir = Dirs(lvl1)
             for lvl2 in new_dir.list_subdirs():
@@ -113,10 +123,3 @@ class Preprocessing():
         print(f"wrong data files: {self.wrong_counter}")
 
 
-if __name__ == "__main__":
-    preprocessing = Preprocessing()
-    preprocessing.clean_old_files()
-    preprocessing.gen_dirs
-    timer = perf_counter()
-    preprocessing.start()
-    print(perf_counter()-timer)

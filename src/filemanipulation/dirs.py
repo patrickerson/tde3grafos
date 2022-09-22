@@ -1,7 +1,7 @@
 
 from os import listdir, mkdir, path
 from platform import system
-from config import WORKDIR
+from src.config import WORKDIR
 class Dirs:
 
     rootdir = WORKDIR
