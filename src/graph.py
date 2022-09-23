@@ -1,7 +1,6 @@
 from collections import defaultdict
 import json
-from pprint import pprint
-from numpy import inf
+
 
 class Graph:
 
@@ -11,9 +10,9 @@ class Graph:
     def increment_edge(self, u, v):
         for i in self.graph[u]:
             if i[0] == v:
-                i[1]+=1
+                i[1] += 1
                 return True
-        self.add_edge(u,v,1)
+        self.add_edge(u, v, 1)
         return False
 
     def add_node(self, u):
@@ -35,8 +34,8 @@ class Graph:
 
     def remove_node(self, u):
         for k in self.graph:
-            if self.check_edge(k,u):
-                self.remove_edge(k,u)
+            if self.check_edge(k, u):
+                self.remove_edge(k, u)
         self.graph.pop(u)
 
     def check_edge(self, u, v):
@@ -63,37 +62,55 @@ class Graph:
 
     def print_graph_adj(self):
         line = ""
-        file = open("output_graph.txt", "w")
+        file = open("outputs/graph.txt", "w")
         for i in self.graph:
-            line+=f"{i} -> "
+            line += f"{i} -> "
             for j in self.graph[i]:
-                line+=f"({j[0]} {j[1]} )-> "
+                line += f"({j[0]} {j[1]} )-> "
             file.write(f"{line}\n")
-            
-            line=""
+
+            line = ""
         file.close()
 
-    def n_nodes(self): # retorna número de vértices do grafo
+    def n_nodes(self):
+        """
+        retorna número de vértices do grafo
+        """
         return len((self.graph))
-    def n_edge(self): # retorna número de arestas do grafo
+
+    def n_edge(self):
+        """
+        retorna número de arestas do grafo
+        """
         count = 0
         for i in self.graph:
             count += len(self.graph[i])
         return count
-    def maior20saida(self): # retorna os 20 nodes com o maior grau de saida e o valor
+
+    def maior20saida(self):
+        """
+        retorna os 20 nodes com o maior grau de saida e o valor
+        """
         nodes = []
         for i in self.graph:
-            nodes.append((self.exitDegree(i),i))
-        nodes.sort(reverse=True)
-        return nodes[:20]
-    def maior20entrada(self): # retorna os 20 nodes com o maior grau de entrada e o valor
-        nodes = []
-        for i in self.graph:
-            nodes.append((self.entryDegree(i),i))
+            nodes.append((self.exitDegree(i), i))
         nodes.sort(reverse=True)
         return nodes[:20]
 
-    def is_euleriano(self): # verifica se o grafo é Euleriano (possui um ciclo contendo todas os nodes)
+    def maior20entrada(self):
+        """
+        retorna os 20 nodes com o maior grau de entrada e o valor
+        """
+        nodes = []
+        for i in self.graph:
+            nodes.append((self.entryDegree(i), i))
+        nodes.sort(reverse=True)
+        return nodes[:20]
+
+    def is_euleriano(self):
+        """
+        verifica se o grafo é Euleriano (possui um ciclo contendo todas os nodes
+        """
         in1out = False
         out1in = False
         for i in self.graph:
@@ -106,107 +123,75 @@ class Graph:
         if (in1out == False) or (out1in == False):
             return False
         return True
-    
-    def dijkstra(self, u, all_nodes=False): 
+
+    def dijkstra(self, u, all_nodes=False, weight_1=False):
         if all_nodes:
             if len(self.graph[u]) == 0:
                 return {}
         inf = float("inf")
-        cost = {key: [inf, ""] for key in self.graph }
-        cost[u] = [0,"-"]
+        cost = {key: [inf, ""] for key in self.graph}
+        cost[u] = [0, "-"]
         visited = {key: False for key in self.graph}
         current_node = u
         while not visited[current_node]:
             adjacent_nodes = self.graph[current_node]
-            for k,v in adjacent_nodes:
 
-                if visited.get(k) == None:
-                    cost[k] = [inf,""] 
-                    visited[k] = False
-                if not  visited[k]:
-                    new_dist = cost[current_node][0] + v
+            for k, v in adjacent_nodes:
+
+                if not visited[k]:
+                    weight = v
+                    if weight_1:
+                        weight = 1
+                    new_dist = cost[current_node][0] + weight
                     if new_dist < cost[k][0]:
                         cost[k][0] = new_dist
                         cost[k][1] = current_node
-            visited[current_node]=True
+            visited[current_node] = True
             min_value = inf
             min_node = ""
             for key in cost:
                 if visited[key]:
                     continue
                 if min_value >= cost[key][0]:
-                    min_value=cost[key][0]
+                    min_value = cost[key][0]
                     min_node = key
-            if min_node=="":
+            if min_node == "":
                 break
-            current_node=min_node
+            current_node = min_node
         return cost
 
     def djijkstra_min_path(self, v, cost):
-        path=[v]
+        path = [v]
         current_node = v
         while cost[current_node][1] != "-":
-            
+
             current_node = cost[current_node][1]
             path.append(current_node)
         path.reverse()
-        return cost[v][0],path
+        return cost[v][0], path
 
     def min_max_path(self, u):
         cost = self.dijkstra(u)
-        max_node =[ float("-inf"), "-"]
+        max_node = [float("-inf"), "-"]
         inf = float("inf")
         for k in cost:
-            if cost[k][0] > max_node[0] and cost[k][0]!=inf:
+            if cost[k][0] > max_node[0] and cost[k][0] != inf:
                 max_node = [cost[k][0], k]
         print(max_node)
         path = self.djijkstra_min_path(max_node[1], cost)
         return max_node, path
 
-    def dijkstra_warshall(self, u, desired_weight): # percorre o grafo a partir do node u e retorna o peso do caminho até cada node
-        inf = float("inf")
-        cost = {key: [inf, ""] for key in self.graph }
-        cost[u] = [0,"-"]
-        visited = {key: False for key in self.graph}
+    def dijkstra_warshall(self, u, desired_weight):
+        cost = self.dijkstra(u, weight_1=True)
         desired_distance = []
-        current_node = u
-        while not visited[current_node]:
-            adjacent_nodes = self.graph[current_node]
-            # if visited[current_node]:
-            #     return path,cost
-            for k,_ in adjacent_nodes:
-                if visited.get(k) == None: 
-                    visited[k] = True
-                if not  visited[k]:
-                    new_dist = cost[current_node][0] + 1
-                    if new_dist < cost[k][0]:
-                        cost[k][0] = new_dist
-                        cost[k][1] = current_node
-            visited[current_node]=True
-            # if cost[current_node][0] == desired_weight:
-            #     path.append(current_node)
-            min_value = inf
-            min_node = ""
-            for key in cost:
-                if visited.get(key) == None: 
-                    visited[key] = True
-                if visited[key]:
-                    continue
-                if min_value >= cost[key][0]:
-                    min_value=cost[key][0]
-                    min_node = key
-            if min_node=="":
-                break
-            current_node=min_node
-        
         for k in cost:
-            if cost[k][0]==desired_weight:
+            if cost[k][0] == desired_weight:
                 desired_distance.append(k)
         return desired_distance
 
     def Dijkstra(self, origem, alvo):
         import numpy as np
-        
+
         visitados = []
         ListaCustoAnterior = {}
         visitaveis = []
@@ -229,7 +214,8 @@ class Graph:
                     # Caso o nó ainda não tenha sido visitado, verifica o caminho
                     # if adj not in visitados:
                     # Obtém o peso da distância do nó de origem até o nó adjacente
-                    acc_cost = ListaCustoAnterior.get(nodeAtual)[1] + self.graph.get(nodeAtual).get(adj)
+                    acc_cost = ListaCustoAnterior.get(
+                        nodeAtual)[1] + self.graph.get(nodeAtual).get(adj)
                     # Se o peso é menor que o peso nele registrado, registra o novo peso e o nó de origem
                     if ListaCustoAnterior.get(adj)[1] > acc_cost:
                         ListaCustoAnterior.get(adj)[1] = acc_cost
@@ -245,7 +231,7 @@ class Graph:
                     if ListaCustoAnterior.get(vertice)[1] < ListaCustoAnterior.get(nodeAtual)[1]:
                         nodeAtual = vertice
         # Processo para encontrar o caminho
-        
+
         caminho = [alvo]
         custo = ListaCustoAnterior.get(alvo)[1]
         contador = 0
@@ -258,120 +244,92 @@ class Graph:
             passo = ListaCustoAnterior.get(passo)[0]
             contador += 1
 
-    
-
     def graph_diameter(self):
         cost_scan = {}
         with open("outputs/dijkstra_scan.json", "r") as file:
-            cost_scan=json.loads(file.read())
+            cost_scan = json.loads(file.read())
 
-        counter =0
-        max_node=[float("-inf"),"-"]
+        counter = 0
+        max_node = [float("-inf"), "-"]
         remote_node = ""
         init_remote_node = ""
         max_cost = {}
         for node in cost_scan:
             for edge in cost_scan[node]:
-                
+
                 if cost_scan[node][edge][0] != float("inf") and cost_scan[node][edge][0] > max_node[0]:
                     max_node = cost_scan[node][edge]
-                    remote_node=edge
-                    init_remote_node=node
-                    max_cost=cost_scan[node]
-                
-        print(f"{init_remote_node} {remote_node}")
-        print(self.djijkstra_min_path(remote_node, max_cost))
+                    remote_node = edge
+                    init_remote_node = node
+                    max_cost = cost_scan[node]
+
+        print(
+            f"node de partida: {init_remote_node}\n node final: {remote_node}")
+        min_path = self.djijkstra_min_path(remote_node, max_cost)
+        print(f"custo: {min_path[0]}")
+        print(f"caminho: {min_path[1]}")
         print(max_node)
 
     def scan_graph_with_dijkstra(self):
-        counter =0
+        counter = 0
         n_nodes = self.n_nodes()
         inf = float("inf")
         dijkstras_costs = {}
         for node in self.graph:
             print(f"\r{counter}/{n_nodes}", sep="", end="")
-            counter+=1
+            counter += 1
             cost = self.dijkstra(node, all_nodes=True)
             if cost != {}:
-        
-                dijkstras_costs[node]=cost
-            
-            
-        
+                dijkstras_costs[node] = cost
+
         with open("outputs/dijkstra_scan.json", "w") as file:
             file.write(json.dumps(dijkstras_costs))
-        
 
     def BFS(self, v, u):
         queue = []
         queue.append(v)
         visited = {key: False for key in self.graph}
         path = []
-        while len(queue)>0:
+        while len(queue) > 0:
             n = queue.pop(0)
-            if n not in visited: visited[n]=True
+            if n not in visited:
+                visited[n] = True
             if not visited[n]:
-                 visited[n] = True
-                 path.append(n)
-            if(n==u): return True,path
+                visited[n] = True
+                path.append(n)
+            if (n == u):
+                return True, path
             adj = self.graph[n]
             for vertice in adj:
                 # if vertice[0] not in visited:
-                if visited.get(vertice[0]) == None: 
+                if visited.get(vertice[0]) == None:
                     visited[vertice[0]] = True
                 if not visited[vertice[0]]:
                     queue.append(vertice[0])
-        return False,path
+        return False, path
 
-    # def BFS(self, v, u):
-    #     fila = []
-    #     fila.append(v)
-    #     visitados = []
-    #     while len(fila)>0:
-    #         n = fila.pop(0)
-    #         if n not in visitados: visitados.append(n)
-    #         if(n==u): return True, visitados
-    #         adj = self.graph[n]
-    #         for vertice in adj:
-    #             if vertice[0] not in visitados:
-    #                 fila.append(vertice[0])
-    #     return False, visitados
-        
-    # def DFS(self,v,u):
-    #     pilha = []
-    #     pilha.append(v)
-    #     visitados = []
-    #     while pilha!=[]:
-    #         n = pilha.pop()
-    #         if n not in visitados: visitados.append(n)
-    #         if(n==u): return True,visitados
-    #         adj = self.graph[n]
-    #         for vertice in adj:
-    #             if vertice[0] not in visitados:
-    #                 pilha.append(vertice[0])
-    #     return False, visitados
-        
-    def DFS(self,v,u):
+    def DFS(self, v, u):
         stack = []
         stack.append(v)
         visited = {key: False for key in self.graph}
         path = []
-        while stack!=[]:
+        while stack != []:
             n = stack.pop()
-            if not visited[n]: 
-                visited[n]=True
+            if not visited[n]:
+                visited[n] = True
                 path.append(n)
-            if(n==u): return True, path
+            if (n == u):
+                return True, path
             adj = self.graph[n]
             for vertice in adj:
-                if visited.get(vertice[0]) == None: 
-                    visited[vertice[0]] = True 
+                if visited.get(vertice[0]) == None:
+                    visited[vertice[0]] = True
                 if not visited[vertice[0]]:
                     stack.append(vertice[0])
-        return False, path      
+        return False, path
 
 
-def main():
+if __name__ == "__main__":
     grafo1 = Graph()
     grafo1.add_node("A")
     grafo1.add_node("B")
@@ -379,20 +337,15 @@ def main():
     grafo1.add_node("D")
     grafo1.add_node("E")
     grafo1.add_node("F")
-    grafo1.add_edge("B", "C", 1)
-    grafo1.add_edge("B", "A", 4)
-    
-    grafo1.add_edge("C", "A", 2)
-    grafo1.add_edge("C", "E", 10)
-    grafo1.add_edge("D", "F", 6)
-    grafo1.add_edge("B", "D", 5)
-    grafo1.add_edge("E", "F", 2)
-    grafo1.add_edge("D", "C", 8)
-    grafo1.add_edge("D", "E", 2)
-    grafo1.add_edge("C", "D", 8)
- 
-
-
-
-if __name__ == "__main__":
-    main()
+    grafo1.add_node("G")
+    grafo1.add_node("J")
+    grafo1.add_edge("A", "B", 3)
+    grafo1.add_edge("B", "C", 9)
+    grafo1.add_edge("C", "D", 3)
+    grafo1.add_edge("B", "E", 5)
+    grafo1.add_edge("E", "C", 4)
+    grafo1.add_edge("B", "G", 1)
+    grafo1.add_edge("E", "C", 5)
+    grafo1.add_edge("D", "F", 50)
+    grafo1.add_edge("J", "F", 1)
+    print(grafo1.dijkstra("A"))
